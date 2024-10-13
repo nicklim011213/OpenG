@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <climits>
 
+bool HasFailed = false;
 
 struct WindowSettings
 {
@@ -15,17 +16,23 @@ struct WindowSettings
     std::string WinTitle = "OpenG";
 };
 
+void ErrorCollector()
+{
+    if (HasFailed == true)
+        exit(EXIT_FAILURE);
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-int main(int argc, char* argv[])
+WindowSettings* ValidateOptions(int argc, char* argv[])
 {
     WindowSettings WinSettings;
     if (argc == 2)
     {
-        std::cout << "Default to 1920X1080 Assuming Argument is Title\n";   
+        std::cout << "Default to 1920X1080 Assuming Argument is Title\n";
         WinSettings.WinTitle = argv[1];
     }
     else if (argc == 4)
@@ -52,30 +59,43 @@ int main(int argc, char* argv[])
     {
         std::cout << "No Args or Invalid Args... Reverting to default\n";
     }
+    return &WinSettings;
+}
 
-
+GLFWwindow* BuildWindow(WindowSettings* WinSettings)
+{
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(WinSettings.WinX, WinSettings.WinY, WinSettings.WinTitle.c_str(), NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(NULL, WinSettings->WinY, WinSettings->WinTitle.c_str(), NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
-        return -1;
+        HasFailed = true;
+        ErrorCollector();
     }
     glfwMakeContextCurrent(window);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
+        HasFailed = true;
+        ErrorCollector();
     }
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glViewport(0, 0, WinSettings.WinX, WinSettings.WinY);
+    glViewport(0, 0, WinSettings->WinX, WinSettings->WinY);
+
+    return window;
+}
+
+int main(int argc, char* argv[])
+{
+    WindowSettings* WinSettings = ValidateOptions(argc, argv);
+    auto window = BuildWindow(WinSettings);
 
     while (!glfwWindowShouldClose(window))
     {
