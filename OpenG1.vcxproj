@@ -139,6 +139,7 @@
     <ClCompile Include="ProjectReader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\json.hpp" />
     <ClInclude Include="ProjectReader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

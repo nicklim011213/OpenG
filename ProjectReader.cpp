@@ -1,15 +1,12 @@
 #include "ProjectReader.h"
-class ProjectHandler
-{
-public:
-	void LoadFile(std::string FilePath)
+	void ProjectHandler::LoadFile(std::string FilePath)
 	{
 		std::ifstream Filehandle = std::ifstream(FilePath);
 		if (!Filehandle)
 		{
 			std::cerr << "ERROR: File cannot be opened, is the path correct?\n";
 		}
-		else
+		/*else
 		{
 			std::string VersionString;
 			std::getline(Filehandle, VersionString);
@@ -23,19 +20,22 @@ public:
 				std::cout << "Version 0.1 Alpha\n";
 			}
 		}
+		*/
+
+		Item Example;
+		using json = nlohmann::json;
 
 	}
-	void SaveFile()
+
+	void ProjectHandler::SaveFile()
 	{
 
 	}
-	void CloseFile()
+
+	void ProjectHandler::CloseFile()
 	{
 
 	}
-private:
-	std::string FilePath;
-};
 
 	void Item::InsertVertex(const Space3D& Vertex, const unsigned int position)
 	{
