@@ -137,10 +137,14 @@
     <ClCompile Include="ModuleHandler.cpp" />
     <ClCompile Include="OpenG.cpp" />
     <ClCompile Include="ProjectReader.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="WorldData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\json.hpp" />
     <ClInclude Include="ProjectReader.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="WorldData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

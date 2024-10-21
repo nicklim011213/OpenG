@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <climits>
 #include "ProjectReader.h"
+#include "Renderer.h"
+#include "WorldData.h"
 
 struct WindowSettings
 {
@@ -95,7 +97,19 @@ int main(int argc, char* argv[])
     ValidateOptions(argc, argv, &WinSettings);
     GLFWwindow* window = BuildWindow(&WinSettings);
 
-    Item i;
+    // Create an item add it to a collection of items
+    Item ExampleItem;
+    ItemCollection ItemCollection;
+    ItemCollection.ItemList[1] = ExampleItem;
+
+    // Upload the ItemCollection to a main renderer
+    Renderer MainRenderer;
+    //MainRenderer.AddItemCollection(ItemCollection);
+
+    json j{ExampleItem.ItemID, ExampleItem.VertexIndex, ExampleItem.VertexList};
+    std::ofstream Output("Out.json");
+    Output << j;
+    Output.close();
 
     while (!glfwWindowShouldClose(window))
     {
