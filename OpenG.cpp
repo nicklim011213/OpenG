@@ -98,15 +98,12 @@ int main(int argc, char* argv[])
     GLFWwindow* window = BuildWindow(&WinSettings);
 
     // Create an item add it to a collection of items
-    Item ExampleItem;
+    CompleteItem ExampleItem("MyItem1", { 0, 1, 0 });
     ItemCollection ItemCollection;
-    ItemCollection.ItemList[1] = ExampleItem;
+    ItemCollection.ItemList.push_back(ExampleItem);
+    ItemCollection.DisplayItemList();
 
-    // Upload the ItemCollection to a main renderer
-    Renderer MainRenderer;
-    //MainRenderer.AddItemCollection(ItemCollection);
-
-    json j{ExampleItem.ItemID, ExampleItem.VertexIndex, ExampleItem.VertexList};
+    json j{ExampleItem.UniqueID, ExampleItem.VertexIndex, ExampleItem.VertexList};
     std::ofstream Output("Out.json");
     Output << j;
     Output.close();

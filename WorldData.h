@@ -6,13 +6,15 @@
 #include <string>
 #include <unordered_map>
 #include <deque>
+#include <optional>
+#include <bitset>
 #include <json.hpp>
 
 using json = nlohmann::json;
 
 struct Space3D
 {
-	unsigned int X, Y, Z;
+	unsigned short int X, Y, Z;
 
 	friend void to_json(json& j, const Space3D& vertex) {
 		j = json{
@@ -27,14 +29,12 @@ struct Space3D
 		j.at("Y").get_to(vertex.Y);
 		j.at("Z").get_to(vertex.Z);
 	}
-
 };
 
 class Item
 {
 public:
 	// A unique ID to refrence the Item by
-	//char* ItemID[512];
 	std::string ItemID;
 
 	// Holds a list of vertexs used in the model of the item
@@ -49,93 +49,53 @@ public:
 	// Overload that inserts at start or end if false
 	void InsertVertex(const Space3D&, const bool Start);
 
-	void ExampleItem()
-	{
-		VertexList = { Space3D{1,2,3}, Space3D{3,2,3}, Space3D{3,2,1} };
-		VertexIndex = { 0,1,2 };
-		ItemID = "Example";
-	}
+	Item();
 
-	Item()
-	{
-		std::cerr << "Item Created as blank (Non-Fatal)\n";
-	}
+	Item(std::vector<Space3D> Points);
 
-	Item(std::vector<Space3D> Points)
-	{
-		for (auto i = Points.begin(); i != Points.end(); ++i)
-		{
-			this->VertexList.push_back(*i);
-		}
-	}
+	Item(std::vector<Space3D> Points, std::string ID);
 
-	Item(std::vector<Space3D> Points, std::string ID)
-	{
-		for (auto i = Points.begin(); i != Points.end(); ++i)
-		{
-			this->VertexList.push_back(*i);
-		}
-		ItemID = ID;
-	}
+	Item(std::vector<Space3D> Points, std::vector<int> TriangleIndexs);
 
-	Item(std::vector<Space3D> Points, std::vector<int> TriangleIndexs)
-	{
-		for (auto i = Points.begin(); i != Points.end(); ++i)
-		{
-			this->VertexList.push_back(*i);
-		}
-		for (auto i = TriangleIndexs.begin(); i != TriangleIndexs.end(); ++i)
-		{
-			this->VertexIndex.push_back(*i);
-		}
-	}
+	Item(std::vector<Space3D> Points, std::vector<int> TriangleIndexs, std::string ID);
 
-	Item(std::vector<Space3D> Points, std::vector<int> TriangleIndexs, std::string ID)
-	{
-		for (auto i = Points.begin(); i != Points.end(); ++i)
-		{
-			this->VertexList.push_back(*i);
-		}
-		for (auto i = TriangleIndexs.begin(); i != TriangleIndexs.end(); ++i)
-		{
-			this->VertexIndex.push_back(*i);
-		}
-		ItemID = ID;
-	}
+	void to_json(json& j, const Item& I);
 
-	void to_json(json& j, const Item& I) {
-		j = json::array();
-		j.push_back({ "ID", I.ItemID });
-		j.push_back({ "VertexIndex", I.VertexIndex });
-		j.push_back({ "VertexList", I.VertexList });
-	}
+	void from_json(const json& j, Item& I);
 
-	void from_json(const json& j, Item& I) {
-		j.at("ID").get_to(I.ItemID);
-		j.at("VertexIndexList").get_to(I.VertexIndex);
-	}
+	void to_json(json& j, const std::deque<Space3D>& vertexList);
 
-	void to_json(json& j, const std::deque<Space3D>& vertexList) {
-		j = json::array();
-		for (const auto& vertex : vertexList) {
-			j.push_back(vertex);
-		}
-	}
+	void from_json(const json& j, std::deque<Space3D>& vertexList);
+};
 
-	void from_json(const json& j, std::deque<Space3D>& vertexList) {
-		vertexList.clear();
-		for (const auto& item : j) {
-			Space3D vertex;
-			item.get_to(vertex);
-			vertexList.push_back(vertex);
-		}
-	}
+struct PointRenderDetails
+{
+	char RGBAT;
+
+	// Encoding
+	// 7 Bits for 1 to 100% Red Green Blue and Alpha
+	// 6 Bits for 0 to 1 Texture Cords for a 0.015 Error
+	// 0.015 in a 100 Pixel Texture would be 1 and a half (Rounded) 2 Pixels percesion.
+};
+
+class CompleteItem
+{
+	public:
+		std::string UniqueID;
+		Space3D Location;
+		PointRenderDetails Details;
+		std::deque<Space3D> VertexList;
+		std::deque<int> VertexIndex;
+
+		CompleteItem(std::string ID, Space3D InsertLocation);
 };
 
 class ItemCollection
 {
 public:
-	std::unordered_map<unsigned int, Item> ItemList;
+	std::deque<CompleteItem> ItemList;
+
+	void DisplayItemList();
 };
 
 #endif
