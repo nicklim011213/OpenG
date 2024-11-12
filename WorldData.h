@@ -14,7 +14,7 @@ using json = nlohmann::json;
 
 struct Space3D
 {
-	unsigned short int X, Y, Z;
+	float X, Y, Z;
 
 	friend void to_json(json& j, const Space3D& vertex) {
 		j = json{
@@ -70,12 +70,12 @@ public:
 
 struct PointRenderDetails
 {
-	char RGBAT;
+	char Texture;
 
 	// Encoding
-	// 7 Bits for 1 to 100% Red Green Blue and Alpha
-	// 6 Bits for 0 to 1 Texture Cords for a 0.015 Error
-	// 0.015 in a 100 Pixel Texture would be 1 and a half (Rounded) 2 Pixels percesion.
+	// It is planned that to add a color to
+	// a texture a new texture is generate
+	// to reduce the size of data passed
 };
 
 class CompleteItem

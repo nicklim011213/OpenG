@@ -1,5 +1,5 @@
-#ifndef PROJECTFILEREADING
-#define PROJECTFILEREADING
+#ifndef PROJECTFILEHANDLING
+#define PROJECTFILEHANDLING
 	#include <iostream>
 	#include <fstream>
 	#include <string>

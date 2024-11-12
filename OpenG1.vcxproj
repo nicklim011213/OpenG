@@ -136,13 +136,13 @@
     <ClCompile Include="Glad\glad.c" />
     <ClCompile Include="ModuleHandler.cpp" />
     <ClCompile Include="OpenG.cpp" />
-    <ClCompile Include="ProjectReader.cpp" />
+    <ClCompile Include="ProjectFileHandler.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="WorldData.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\json.hpp" />
-    <ClInclude Include="ProjectReader.h" />
+    <ClInclude Include="ProjectFileHandler.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="WorldData.h" />
   </ItemGroup>

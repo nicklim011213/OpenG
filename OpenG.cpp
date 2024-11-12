@@ -6,7 +6,7 @@
 #include <iostream>
 #include <errno.h>
 #include <climits>
-#include "ProjectReader.h"
+#include "ProjectFileHandler.h"
 #include "Renderer.h"
 #include "WorldData.h"
 
@@ -108,10 +108,13 @@ int main(int argc, char* argv[])
     Output << j;
     Output.close();
 
+    Renderer Rendererinstance;
+
+    Rendererinstance.RenderSetup(ItemCollection);
+
     while (!glfwWindowShouldClose(window))
     {
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        Rendererinstance.RenderLoop(window);
     }
 
     glfwDestroyWindow(window);

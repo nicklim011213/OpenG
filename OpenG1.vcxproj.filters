@@ -24,7 +24,7 @@
     <ClCompile Include="ModuleHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ProjectReader.cpp">
+    <ClCompile Include="ProjectFileHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
@@ -35,7 +35,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ProjectReader.h">
+    <ClInclude Include="ProjectFileHandler.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Include\json.hpp">
