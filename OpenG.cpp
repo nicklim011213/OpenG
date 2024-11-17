@@ -87,7 +87,6 @@ GLFWwindow* BuildWindow(WindowSettings* WinSettings)
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glViewport(0, 0, WinSettings->WinX, WinSettings->WinY);
-
     return window;
 }
 
@@ -109,12 +108,13 @@ int main(int argc, char* argv[])
     Output.close();
 
     Renderer Rendererinstance;
+    RenderAddresses RenderObjects;
 
-    Rendererinstance.RenderSetup(ItemCollection);
+    Rendererinstance.RenderSetup(ItemCollection, &RenderObjects);
 
     while (!glfwWindowShouldClose(window))
     {
-        Rendererinstance.RenderLoop(window);
+        Rendererinstance.RenderLoop(window, &RenderObjects);
     }
 
     glfwDestroyWindow(window);

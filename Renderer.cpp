@@ -2,7 +2,7 @@
 #include "WorldData.h"
 #include <array>
 
-void Renderer::RenderSetup(ItemCollection ItemsToDraw)
+void Renderer::RenderSetup(ItemCollection ItemsToDraw, RenderAddresses* RenderObjects)
 {
 	const char* vertexShaderSource = "#version 330 core\n"
 		"layout (location = 0) in vec3 aPos;\n"
@@ -14,6 +14,7 @@ void Renderer::RenderSetup(ItemCollection ItemsToDraw)
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
+	RenderObjects->VertexShader = vertexShader;
 
 	const char* fragmentShaderSource = "#version 330 core\n"
 		"out vec4 FragColor;\n"
@@ -21,60 +22,47 @@ void Renderer::RenderSetup(ItemCollection ItemsToDraw)
 		"{\n"
 		"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 		"}\n\0";
+
+	float VertexArray[] = {
+	-0.5f, -0.5f, 0.0f,
+	 0.5f, -0.5f, 0.0f,
+	 0.0f,  0.5f, 0.0f
+	};
+
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
+	RenderObjects->FragmentShader = fragmentShader;
 
 	unsigned int shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
+	RenderObjects->ShaderProgram = shaderProgram;
 
+	unsigned int VertexArrayObject;
+	unsigned int VertexBufferObject;
+	glGenVertexArrays(1, &VertexArrayObject);
+	glGenBuffers(1, &VertexBufferObject);
+	glBindVertexArray(VertexArrayObject);
+	RenderObjects->VAO = VertexArrayObject;
 
-	std::deque<CompleteItem> UnpackedItems = ItemsToDraw.ItemList;
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(VertexArray), VertexArray, GL_STATIC_DRAW);
+	RenderObjects->VBO = VertexBufferObject;
 
-	for (int i = 0; i != UnpackedItems.size(); ++i)
-	{
-
-		const int size = UnpackedItems[i].VertexList.size() * 3;
-		float* VertexArray = new float[size];
-		for (int j = 0; j != UnpackedItems[i].VertexList.size(); j += 3)
-		{
-			VertexArray[j] = UnpackedItems[i].VertexList[j].X;
-			VertexArray[j + 1] = UnpackedItems[i].VertexList[j + 1].Y;
-			VertexArray[j + 2] = UnpackedItems[i].VertexList[j + 2].Z;
-		}
-
-
-		unsigned int VertexArrayObject;
-		glGenVertexArrays(1, &VertexArrayObject);
-		glBindVertexArray(VertexArrayObject);
-
-
-		unsigned int VertexBufferObject;
-		glGenBuffers(1, &VertexBufferObject);
-		glBindBuffer(VertexBufferObject, GL_ARRAY_BUFFER);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(VertexArray), VertexArray, GL_STATIC_DRAW);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VertexArrayObject);
-	}
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);	
 }
 
-void Renderer::RenderLoop(GLFWwindow* window)
+void Renderer::RenderLoop(GLFWwindow* window, RenderAddresses* RenderObjects)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+	glUseProgram(RenderObjects->ShaderProgram);
+	glBindVertexArray(RenderObjects->VAO);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }
