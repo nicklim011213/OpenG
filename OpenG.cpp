@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
     GLFWwindow* window = BuildWindow(&WinSettings);
 
     // Create an item add it to a collection of items
-    CompleteItem ExampleItem("MyItem1", { 0, 1, 0 });
+    CompleteItem ExampleItem("MyItem1", { 0, 0, 0 });
     ItemCollection ItemCollection;
     ItemCollection.ItemList.push_back(ExampleItem);
     ItemCollection.DisplayItemList();
@@ -109,6 +109,13 @@ int main(int argc, char* argv[])
 
     Renderer Rendererinstance;
     RenderAddresses RenderObjects;
+    unsigned int VertexArrayObject = 0;
+    unsigned int VertexBufferObject = 0;
+    unsigned int ElementBufferObject = 0;
+
+    RenderObjects.VAO = VertexArrayObject;
+    RenderObjects.VBO = VertexBufferObject;
+    RenderObjects.EBO = ElementBufferObject;
 
     Rendererinstance.RenderSetup(ItemCollection, &RenderObjects);
 

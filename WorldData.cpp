@@ -141,7 +141,7 @@ CompleteItem::CompleteItem(std::string ID, Space3D InsertLocation)
 {
 	UniqueID = ID;
 	Location = InsertLocation;
-	VertexList = { { 0.5, 1, 0 },  {0, 0, 0 }, {1, 0, 0} };
+	VertexList = { { 0, 0.5, 0 },  {0.5, -0.5, 0 }, {-0.5, -0.5, 0} };
 	VertexIndex = { 0, 1, 2 };
 
 	//TODO Create Default Detials and make a json function for it

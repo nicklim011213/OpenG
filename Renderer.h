@@ -6,7 +6,7 @@
 
 struct RenderAddresses
 {
-	unsigned int VAO, VBO, VertexShader, FragmentShader, ShaderProgram;
+	unsigned int VAO, VBO, EBO, VertexShader, FragmentShader, ShaderProgram;
 };
 
 class Renderer
